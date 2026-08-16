@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Utshav · Claymorphism</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #eef2f5;  /* soft neutral base */
+      background-image: radial-gradient(circle at 20% 30%, #f5f8fc 0%, #dce3ec 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* --- main clay card (vibrant claymorphism) --- */
+    .clay-card {
+      max-width: 1350px;
+      width: 100%;
+      background: #f8faff;
+      border-radius: 4.8rem 4.8rem 4rem 4rem;
+      padding: 2rem 2.2rem;
+      box-shadow: 
+        0 30px 50px -15px rgba(0, 20, 40, 0.25),
+        0 10px 20px -8px rgba(0, 0, 0, 0.08),
+        inset 0 -6px 12px rgba(255, 255, 255, 0.7),
+        inset 0 10px 20px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    /* soft glow */
+    .clay-card::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: -10%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(circle, rgba(110, 180, 255, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      border-radius: 50%;
+      animation: glowFloat 12s ease-in-out infinite alternate;
+    }
+    @keyframes glowFloat {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+      100% { transform: translate(60px, 40px) scale(1.4); opacity: 1; }
+    }
+
+    /* === CLAY ELEMENTS (vibrant) === */
+    .clay-element {
+      background: #f0f5fe;
+      border-radius: 3.2rem;
+      box-shadow: 
+        0 16px 28px -10px rgba(30, 60, 120, 0.15),
+        0 6px 12px rgba(0, 0, 0, 0.03),
+        inset 0 -6px 12px rgba(255, 255, 255, 0.8),
+        inset 0 6px 14px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(2px);
+    }
+    .clay-element:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 
+        0 24px 40px -14px rgba(30, 60, 120, 0.2),
+        0 8px 16px rgba(0, 0, 0, 0.04),
+        inset 0 -6px 12px rgba(255, 255, 255, 0.9),
+        inset 0 6px 18px rgba(255, 255, 255, 1);
+    }
+
+    /* ----- HEADER with HAMBURGER ----- */
+    .header-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.4rem 1.5rem 0.4rem 2rem;
+      margin-bottom: 2.2rem;
+      background: #f5faff;
+      border-radius: 4rem;
+      box-shadow: 
+        0 12px 24px -10px rgba(30, 60, 120, 0.08),
+        inset 0 -4px 8px rgba(255, 255, 255, 0.7),
+        inset 0 4px 12px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      position: relative;
+    }
+
+    .logo h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #1a2b4c;
+      text-shadow: 0 2px 12px rgba(60, 120, 255, 0.08);
+    }
+    .logo span {
+      font-weight: 300;
+      color: #4a7abf;
+    }
+    .logo i {
+      color: #3a6aaa;
+      margin-right: 6px;
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px 6px;
+      background: transparent;
+      border: none;
+      z-index: 20;
+    }
+    .hamburger span {
+      display: block;
+      width: 30px;
+      height: 3.5px;
+      background: #1a2b4c;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #1a2b4c;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 3.5rem;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(4px);
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.6);
+    }
+    .nav-links a i { margin-right: 6px; opacity: 0.7; }
+    .nav-links a:hover, .nav-links a.active {
+      background: #1a2b4c;
+      color: #ffffff;
+      box-shadow: 0 8px 18px -8px rgba(20, 60, 140, 0.3), inset 0 -2px 6px rgba(255, 255, 255, 0.2);
+      transform: scale(0.96);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* page system */
+    .page {
+      display: none;
+      animation: fadeSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .page.active { display: block; }
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(18px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ===== HOME ===== */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2.5rem;
+      padding: 0.5rem 0.2rem 1rem;
+    }
+    .hero-content { flex: 1 1 280px; }
+    .hero-content .badge {
+      display: inline-block;
+      background: #1a2b4c;
+      padding: 0.4rem 2rem;
+      border-radius: 4rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(20, 60, 140, 0.15);
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      animation: pulseBadge 3s ease-in-out infinite;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); box-shadow: 0 8px 24px rgba(20, 60, 140, 0.2); }
+    }
+    .hero-content h2 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: #0e1a2e;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .hero-content h2 i {
+      color: #3a6aaa;
+      font-size: 2.8rem;
+      margin-right: 8px;
+      animation: wave 2.5s ease-in-out infinite;
+    }
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(12deg); }
+      75% { transform: rotate(-8deg); }
+    }
+    .hero-content p {
+      font-size: 1.2rem;
+      color: #2a3f62;
+      max-width: 480px;
+      margin-bottom: 2rem;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn-clay {
+      background: #f0f5fe;
+      border: none;
+      padding: 0.9rem 2.4rem;
+      border-radius: 4rem;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #0e1a2e;
+      box-shadow: 
+        0 12px 22px -10px rgba(30, 60, 120, 0.15),
+        inset 0 -5px 10px rgba(255, 255, 255, 0.8),
+        inset 0 5px 14px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-clay i { opacity: 0.8; }
+    .btn-clay:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 20px 32px -14px rgba(30, 60, 120, 0.25), inset 0 -5px 10px rgba(255, 255, 255, 0.9);
+      background: #ffffff;
+    }
+    .btn-clay:active { transform: scale(0.96); }
+    .btn-outline {
+      background: transparent;
+      box-shadow: inset 0 0 0 1.5px rgba(26, 43, 76, 0.15), 0 8px 16px -8px rgba(0,0,0,0.04);
+    }
+    .btn-outline:hover { background: #1a2b4c; color: #fff; box-shadow: 0 12px 24px -10px rgba(20, 60, 140, 0.2); }
+
+    .hero-avatar {
+      flex: 0 0 180px;
+      display: flex;
+      justify-content: center;
+    }
+    .avatar-clay {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: #eaf1fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5.5rem;
+      color: #1a2b4c;
+      box-shadow: 
+        0 24px 40px -14px rgba(30, 60, 120, 0.2),
+        inset 0 -8px 16px rgba(255, 255, 255, 0.8),
+        inset 0 12px 24px rgba(255, 255, 255, 0.9);
+      border: 3px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      animation: floatAvatar 6s ease-in-out infinite;
+    }
+    @keyframes floatAvatar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .avatar-clay img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    /* ===== PROJECTS ===== */
+    .section-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #0e1a2e;
+      padding-left: 0.8rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title i { color: #3a6aaa; font-size: 1.8rem; }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.8rem;
+    }
+    .project-card {
+      padding: 1.8rem 1.5rem 2rem;
+      background: #f5faff;
+      border-radius: 3rem;
+      box-shadow: 
+        0 12px 24px -10px rgba(30, 60, 120, 0.08),
+        inset 0 -6px 12px rgba(255, 255, 255, 0.7),
+        inset 0 6px 14px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+    }
+    .project-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 28px 44px -16px rgba(30, 60, 120, 0.18), inset 0 -6px 12px rgba(255, 255, 255, 0.8);
+    }
+    .project-card i {
+      font-size: 2.8rem;
+      color: #1a2b4c;
+      background: rgba(255, 255, 255, 0.4);
+      padding: 0.8rem;
+      border-radius: 2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: inset 0 -2px 8px rgba(255, 255, 255, 0.6);
+    }
+    .project-card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #0e1a2e;
+      margin-bottom: 0.4rem;
+    }
+    .project-card p {
+      color: #2a3f62;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .project-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      background: #1a2b4c;
+      padding: 0.3rem 1.4rem;
+      border-radius: 3rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ===== ABOUT ===== */
+    .about-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .about-photo { flex: 0 0 170px; display: flex; justify-content: center; }
+    .about-photo .avatar-clay { width: 160px; height: 160px; animation: floatAvatar 7s ease-in-out infinite; }
+    .about-text { flex: 2 1 300px; }
+    .about-text h3 {
+      font-size: 1.8rem;
+      color: #0e1a2e;
+      margin-bottom: 0.8rem;
+      font-weight: 700;
+    }
+    .about-text p {
+      color: #1a2f4a;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      max-width: 620px;
+    }
+    .about-details {
+      flex: 1 1 220px;
+      background: #f5faff;
+      padding: 1.8rem 2rem;
+      border-radius: 3.2rem;
+      box-shadow: 
+        0 12px 24px -10px rgba(30, 60, 120, 0.08),
+        inset 0 -6px 12px rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .about-details p {
+      color: #1a2f4a;
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1rem;
+    }
+    .about-details i { width: 2rem; color: #3a6aaa; font-size: 1.3rem; }
+
+    /* ===== CONTACT ===== */
+    .contact-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+    }
+    .contact-info {
+      flex: 1 1 250px;
+      background: #f5faff;
+      padding: 2rem 2.2rem;
+      border-radius: 3.2rem;
+      box-shadow: 0 12px 24px -10px rgba(30, 60, 120, 0.08), inset 0 -6px 12px rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .contact-info h3 {
+      color: #0e1a2e;
+      margin-bottom: 1.4rem;
+      font-size: 1.4rem;
+    }
+    .contact-info p {
+      color: #1a2f4a;
+      margin: 1.2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1rem;
+    }
+    .contact-info i { width: 2rem; color: #3a6aaa; font-size: 1.3rem; }
+    .contact-info a {
+      color: #1a2b4c;
+      text-decoration: none;
+      border-bottom: 1.5px solid transparent;
+      transition: 0.2s;
+    }
+    .contact-info a:hover { border-bottom-color: #3a6aaa; }
+
+    .contact-form {
+      flex: 2 1 320px;
+      background: #f5faff;
+      padding: 2rem 2.2rem;
+      border-radius: 3.2rem;
+      box-shadow: 0 12px 24px -10px rgba(30, 60, 120, 0.08), inset 0 -6px 12px rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .contact-form h3 {
+      color: #0e1a2e;
+      margin-bottom: 1.4rem;
+      font-size: 1.4rem;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block;
+      color: #1a2f4a;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.9rem 1.4rem;
+      border-radius: 3.5rem;
+      background: #ffffff;
+      border: 1px solid rgba(26, 43, 76, 0.08);
+      color: #0e1a2e;
+      font-size: 1rem;
+      transition: 0.2s;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: #3a6aaa;
+      box-shadow: 0 0 0 4px rgba(58, 106, 170, 0.06), inset 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .form-group textarea {
+      border-radius: 2rem;
+      min-height: 110px;
+      resize: vertical;
+    }
+    .form-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .form-row .form-group { flex: 1 1 150px; }
+
+    /* ===== FOOTER ===== */
+    .footer-clay {
+      margin-top: 3rem;
+      padding: 1.2rem 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4rem;
+      background: #f5faff;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 12px 24px -10px rgba(30, 60, 120, 0.06), inset 0 -4px 8px rgba(255, 255, 255, 0.6);
+    }
+    .footer-clay p { color: #1a2f4a; font-size: 0.95rem; }
+    .social-links { display: flex; gap: 1.2rem; }
+    .social-links a {
+      color: #1a2b4c;
+      font-size: 1.5rem;
+      transition: all 0.2s ease;
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3rem;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(2px);
+      box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .social-links a:hover {
+      background: #1a2b4c;
+      color: #ffffff;
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 24px -10px rgba(20, 60, 140, 0.2);
+    }
+
+    /* ===== RESPONSIVE (hamburger) ===== */
+    @media (max-width: 820px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: #f5faff;
+        padding: 1.2rem 1rem;
+        border-radius: 2.5rem;
+        margin-top: 0.8rem;
+        box-shadow: 0 16px 32px -12px rgba(30, 60, 120, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        gap: 0.4rem;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+      .header-wrap { flex-wrap: wrap; padding: 0.6rem 1.2rem; }
+    }
+
+    @media (max-width: 680px) {
+      .clay-card { padding: 1.2rem 0.8rem; border-radius: 3rem; }
+      .hero-content h2 { font-size: 2.4rem; }
+      .hero-avatar { flex: 1 1 100%; justify-content: center; }
+      .avatar-clay { width: 140px; height: 140px; font-size: 4.2rem; }
+      .about-photo { flex: 1 1 100%; justify-content: center; }
+      .about-photo .avatar-clay { width: 140px; height: 140px; }
+      .project-grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+      .contact-wrapper { flex-direction: column; }
+      .form-row { flex-direction: column; }
+      .footer-clay { flex-direction: column-reverse; gap: 1rem; text-align: center; }
+    }
+    @media (max-width: 450px) {
+      .project-grid { grid-template-columns: 1fr; }
+      .btn-clay { width: 100%; justify-content: center; }
+      .cta-group { flex-direction: column; width: 100%; }
+      .hero-content h2 { font-size: 2rem; }
+      .logo h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="clay-card">
+
+  <!-- HEADER with HAMBURGER -->
+  <div class="header-wrap">
+    <div class="logo">
+      <h1><i class="fas fa-shield"></i> Utshav<span>.</span></h1>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="#" class="active" data-page="home"><i class="fas fa-house"></i> Home</a>
+      <a href="#" data-page="projects"><i class="fas fa-folder"></i> Work</a>
+      <a href="#" data-page="about"><i class="fas fa-address-card"></i> About</a>
+      <a href="#" data-page="contact"><i class="fas fa-envelope"></i> Contact</a>
+    </div>
+  </div>
+
+  <!-- ========== PAGES ========== -->
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="badge"><i class="fas fa-code"></i>  full-stack · security</div>
+        <h2><i class="fas fa-hand-peace"></i> Utshav Katuwal</h2>
+        <p>Full-stack developer & cybersecurity expert. Building resilient digital solutions with a modern, soft touch.</p>
+        <div class="cta-group">
+          <button class="btn-clay" onclick="switchPage('projects')"><i class="fas fa-cubes"></i> View Work</button>
+          <button class="btn-clay btn-outline" onclick="switchPage('contact')"><i class="fas fa-arrow-right"></i> Contact</button>
+        </div>
+      </div>
+      <div class="hero-avatar">
+        <div class="avatar-clay">
+          <img src="pfp.jpeg">
+        </div>
+      </div>
+    </div>
+    <!-- highlight bar with animations -->
+    <div style="margin-top: 1.8rem; padding: 0.8rem 1.5rem; background: #f5faff; border-radius: 4rem; border:1px solid rgba(255,255,255,0.5); box-shadow: inset 0 -4px 8px rgba(255,255,255,0.6);">
+      <p style="color:#1a2f4a; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; font-weight:500; font-size:0.95rem;">
+        <span><i class="fas fa-laptop-code" style="color:#3a6aaa; margin-right: 6px;"></i> Full Stack Dev</span>
+        <span><i class="fas fa-shield" style="color:#3a6aaa; margin-right: 6px;"></i> Cyber Security</span>
+        <span><i class="fas fa-cloud" style="color:#3a6aaa; margin-right: 6px;"></i> Cloud & DevOps</span>
+        <span><i class="fas fa-database" style="color:#3a6aaa; margin-right: 6px;"></i> Data Engineering</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div id="page-projects" class="page">
+    <div class="section-title"><i class="fas fa-cubes"></i> featured projects</div>
+    <div class="project-grid">
+      <div class="project-card">
+        <i class="fas fa-shield-halved"></i>
+        <h3>SecureAuth Pro</h3>
+        <p>MFA, zero-trust & adaptive authentication layer for enterprise.</p>
+        <span class="project-tag">Security</span>
+      </div>
+      <div class="project-card">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <h3>NimbusStack</h3>
+        <p>Full-stack deployment pipeline with CI/CD, monitoring & auto-scaling.</p>
+        <span class="project-tag">DevOps</span>
+      </div>
+      <div class="project-card">
+        <i class="fas fa-robot"></i>
+        <h3>ThreatIntel AI</h3>
+        <p>AI-driven threat detection dashboard with real-time alerts.</p>
+        <span class="project-tag">ML + Security</span>
+      </div>
+      <div class="project-card">
+        <i class="fas fa-store"></i>
+        <h3>EcoMart Global</h3>
+        <p>E‑commerce platform with real-time inventory, analytics & payment.</p>
+        <span class="project-tag">Full Stack</span>
+      </div>
+      <div class="project-card">
+        <i class="fas fa-database"></i>
+        <h3>DataVault X</h3>
+        <p>Encrypted data storage & secure sharing with blockchain audit.</p>
+        <span class="project-tag">Crypto</span>
+      </div>
+      <div class="project-card">
+        <i class="fas fa-code-branch"></i>
+        <h3>DevSecOps Pipeline</h3>
+        <p>Automated security scanning, SAST, DAST integrated in CI/CD.</p>
+        <span class="project-tag">CI/CD</span>
+      </div>
+    </div>
+    <!-- extra content -->
+    <div style="margin-top: 2rem; padding: 1.5rem 2rem; background: #f5faff; border-radius: 3rem; border:1px solid rgba(255,255,255,0.5); box-shadow: inset 0 -4px 8px rgba(255,255,255,0.6);">
+      <p style="color:#1a2f4a; font-size:1rem; display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;">
+        <span><i class="fas fa-check-circle" style="color:#3a6aaa;"></i> 15+ successful projects</span>
+        <span><i class="fas fa-check-circle" style="color:#3a6aaa;"></i> 10+ happy clients</span>
+        <span><i class="fas fa-check-circle" style="color:#3a6aaa;"></i> 4 industry awards</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="page-about" class="page">
+    <div class="about-grid">
+      <div class="about-photo">
+        <div class="avatar-clay">
+          <img src="pfp.jpeg">
+        </div>
+      </div>
+      <div class="about-text">
+        <h3><i class="fas fa-user-tie" style="color:#3a6aaa; margin-right: 12px;"></i>About Utshav</h3>
+        <p>I'm a full-stack developer and cybersecurity specialist based in Ilam, Nepal. With a passion for building secure, scalable applications, I blend modern development practices with a strong security mindset. I enjoy crafting clean interfaces and robust backends that stand up to real-world threats.</p>
+        <p style="margin-top: 1rem;"><i class="fas fa-graduation-cap" style="color:#3a6aaa; margin-right: 10px;"></i> BCS Cybersecurity(HONS) - IIMS(Taylor's University) Ongoing</p>
+        <p style="margin-top: 0.4rem;"><i class="fas fa-heart" style="color:#3a6aaa; margin-right: 10px;"></i> Open source contributor, CTF challenges, and modern UI/UX.</p>
+        <p style="margin-top: 0.4rem;"><i class="fas fa-award" style="color:#3a6aaa; margin-right: 10px;"></i> 6+ years experience · 20+ projects delivered · 3x hackathon winner</p>
+      </div>
+      <div class="about-details">
+        <p><i class="fas fa-map-pin"></i> Ilam, Nepal</p>
+        <p><i class="fas fa-phone"></i> +977 9700169343</p>
+        <p><i class="fas fa-envelope"></i> utshavkatuwal@gmail.com</p>
+        <p><i class="fas fa-globe"></i> utshavkatuwal.com.np</p>
+        <p><i class="fas fa-shield"></i> Security · Full Stack · Cloud</p>
+        <p><i class="fas fa-clock"></i> Available for freelance & audits</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="page-contact" class="page">
+    <div class="section-title"><i class="fas fa-address-book"></i> get in touch</div>
+    <div class="contact-wrapper">
+      <div class="contact-info">
+        <h3><i class="fas fa-paper-plane" style="color:#3a6aaa; margin-right:8px;"></i>Reach me</h3>
+        <p><i class="fas fa-envelope"></i> <a href="mailto:utshavkatuwal@gmail.com">utshavkatuwal@gmail.com</a></p>
+        <p><i class="fas fa-phone"></i> <a href="tel:9700169343">+977 9700169343</a></p>
+        <p><i class="fas fa-map-marker-alt"></i> Ilam, Nepal</p>
+        <p><i class="fab fa-github"></i> <a href="#">github.com/utshavkatuwal</a></p>
+        <p><i class="fab fa-linkedin"></i> <a href="#">linkedin.com/in/utshav-katuwal-69184b416/</a></p>
+        <p><i class="fab fa-twitter"></i> <a href="#">@utshav_katuwal</a></p>
+        <p style="margin-top:1.5rem; color:#1a2f4a; font-size:0.95rem;"><i class="fas fa-clock" style="color:#3a6aaa;"></i> Available for freelance, collaborations & security audits.</p>
+      </div>
+      <div class="contact-form">
+        <h3><i class="fas fa-message" style="color:#3a6aaa; margin-right:8px;"></i>Send a message</h3>
+        <form id="contactForm" onsubmit="event.preventDefault(); alert('Thanks! I\'ll get back to you soon.');">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="john@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" placeholder="Project inquiry / collaboration">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Tell me about your project, security audit, or idea..." required></textarea>
+          </div>
+          <button type="submit" class="btn-clay" style="width:100%; justify-content:center; margin-top:0.5rem;"><i class="fas fa-paper-plane"></i> Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-clay">
+    <p><i class="fas fa-copyright" style="opacity:0.6;"></i> 2026 Utshav Katuwal</p>
+    <div class="social-links">
+      <a href="https://github.com/utshavkatuwal"><i class="fab fa-github"></i></a>
+      <a href="https://linkedin.com/in/utshav-katuwal-69184b416/"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://x.com/UtshavKatu48833"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.instagram.com/utshavkatuwal/"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/@UtshavKatuwal"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburgerBtn');
+  const navLinks = document.getElementById('navLinks');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('open');
+  });
+
+  // Page switching
+  const navLinkItems = document.querySelectorAll('#navLinks a');
+  const pages = {
+    home: document.getElementById('page-home'),
+    projects: document.getElementById('page-projects'),
+    about: document.getElementById('page-about'),
+    contact: document.getElementById('page-contact')
+  };
+
+  function switchPage(pageId) {
+    Object.values(pages).forEach(p => p.classList.remove('active'));
+    if (pages[pageId]) pages[pageId].classList.add('active');
+    navLinkItems.forEach(link => {
+      link.classList.remove('active');
+      if (link.dataset.page === pageId) link.classList.add('active');
+    });
+    hamburger.classList.remove('active');
+    navLinks.classList.remove('open');
+    document.querySelector('.clay-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  navLinkItems.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = link.dataset.page;
+      if (page) switchPage(page);
+    });
+  });
+
+  window.switchPage = switchPage;
+</script>
+
+</body>
+</html>
