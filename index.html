@@ -1,809 +1,765 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Utshav</title>
-  <!-- Font Awesome 6 (free) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    }
 
-    body {
-      min-height: 100vh;
-      background: #eef2f5;  /* soft neutral base */
-      background-image: radial-gradient(circle at 20% 30%, #f5f8fc 0%, #dce3ec 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    /* --- main clay card (vibrant claymorphism) --- */
-    .clay-card {
-      max-width: 1350px;
-      width: 100%;
-      background: #f8faff;
-      border-radius: 4.8rem 4.8rem 4rem 4rem;
-      padding: 2rem 2.2rem;
-      box-shadow: 
-        0 30px 50px -15px rgba(0, 20, 40, 0.25),
-        0 10px 20px -8px rgba(0, 0, 0, 0.08),
-        inset 0 -6px 12px rgba(255, 255, 255, 0.7),
-        inset 0 10px 20px rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    /* soft glow */
-    .clay-card::before {
-      content: '';
-      position: absolute;
-      top: -20%;
-      left: -10%;
-      width: 60%;
-      height: 60%;
-      background: radial-gradient(circle, rgba(110, 180, 255, 0.08) 0%, transparent 70%);
-      pointer-events: none;
-      border-radius: 50%;
-      animation: glowFloat 12s ease-in-out infinite alternate;
-    }
-    @keyframes glowFloat {
-      0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-      100% { transform: translate(60px, 40px) scale(1.4); opacity: 1; }
-    }
-
-    /* === CLAY ELEMENTS (vibrant) === */
-    .clay-element {
-      background: #f0f5fe;
-      border-radius: 3.2rem;
-      box-shadow: 
-        0 16px 28px -10px rgba(30, 60, 120, 0.15),
-        0 6px 12px rgba(0, 0, 0, 0.03),
-        inset 0 -6px 12px rgba(255, 255, 255, 0.8),
-        inset 0 6px 14px rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-      backdrop-filter: blur(2px);
-    }
-    .clay-element:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 
-        0 24px 40px -14px rgba(30, 60, 120, 0.2),
-        0 8px 16px rgba(0, 0, 0, 0.04),
-        inset 0 -6px 12px rgba(255, 255, 255, 0.9),
-        inset 0 6px 18px rgba(255, 255, 255, 1);
-    }
-
-    /* ----- HEADER with HAMBURGER ----- */
-    .header-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.4rem 1.5rem 0.4rem 2rem;
-      margin-bottom: 2.2rem;
-      background: #f5faff;
-      border-radius: 4rem;
-      box-shadow: 
-        0 12px 24px -10px rgba(30, 60, 120, 0.08),
-        inset 0 -4px 8px rgba(255, 255, 255, 0.7),
-        inset 0 4px 12px rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      position: relative;
-    }
-
-    .logo h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: #1a2b4c;
-      text-shadow: 0 2px 12px rgba(60, 120, 255, 0.08);
-    }
-    .logo span {
-      font-weight: 300;
-      color: #4a7abf;
-    }
-    .logo i {
-      color: #3a6aaa;
-      margin-right: 6px;
-    }
-
-    /* hamburger */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 8px 6px;
-      background: transparent;
-      border: none;
-      z-index: 20;
-    }
-    .hamburger span {
-      display: block;
-      width: 30px;
-      height: 3.5px;
-      background: #1a2b4c;
-      border-radius: 6px;
-      transition: all 0.3s ease;
-    }
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(6px, -6px);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 0.8rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #1a2b4c;
-      font-weight: 500;
-      font-size: 1rem;
-      padding: 0.6rem 1.4rem;
-      border-radius: 3.5rem;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(4px);
-      transition: all 0.2s ease;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.6);
-    }
-    .nav-links a i { margin-right: 6px; opacity: 0.7; }
-    .nav-links a:hover, .nav-links a.active {
-      background: #1a2b4c;
-      color: #ffffff;
-      box-shadow: 0 8px 18px -8px rgba(20, 60, 140, 0.3), inset 0 -2px 6px rgba(255, 255, 255, 0.2);
-      transform: scale(0.96);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    /* page system */
-    .page {
-      display: none;
-      animation: fadeSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .page.active { display: block; }
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(18px) scale(0.98); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ===== HOME ===== */
-    .hero {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 2.5rem;
-      padding: 0.5rem 0.2rem 1rem;
-    }
-    .hero-content { flex: 1 1 280px; }
-    .hero-content .badge {
-      display: inline-block;
-      background: #1a2b4c;
-      padding: 0.4rem 2rem;
-      border-radius: 4rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #ffffff;
-      box-shadow: 0 6px 14px rgba(20, 60, 140, 0.15);
-      margin-bottom: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      animation: pulseBadge 3s ease-in-out infinite;
-    }
-    @keyframes pulseBadge {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); box-shadow: 0 8px 24px rgba(20, 60, 140, 0.2); }
-    }
-    .hero-content h2 {
-      font-size: 3.2rem;
-      font-weight: 700;
-      line-height: 1.1;
-      color: #0e1a2e;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-    .hero-content h2 i {
-      color: #3a6aaa;
-      font-size: 2.8rem;
-      margin-right: 8px;
-      animation: wave 2.5s ease-in-out infinite;
-    }
-    @keyframes wave {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(12deg); }
-      75% { transform: rotate(-8deg); }
-    }
-    .hero-content p {
-      font-size: 1.2rem;
-      color: #2a3f62;
-      max-width: 480px;
-      margin-bottom: 2rem;
-      font-weight: 400;
-      line-height: 1.6;
-    }
-    .cta-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-    }
-    .btn-clay {
-      background: #f0f5fe;
-      border: none;
-      padding: 0.9rem 2.4rem;
-      border-radius: 4rem;
-      font-weight: 600;
-      font-size: 1.05rem;
-      color: #0e1a2e;
-      box-shadow: 
-        0 12px 22px -10px rgba(30, 60, 120, 0.15),
-        inset 0 -5px 10px rgba(255, 255, 255, 0.8),
-        inset 0 5px 14px rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .btn-clay i { opacity: 0.8; }
-    .btn-clay:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 20px 32px -14px rgba(30, 60, 120, 0.25), inset 0 -5px 10px rgba(255, 255, 255, 0.9);
-      background: #ffffff;
-    }
-    .btn-clay:active { transform: scale(0.96); }
-    .btn-outline {
-      background: transparent;
-      box-shadow: inset 0 0 0 1.5px rgba(26, 43, 76, 0.15), 0 8px 16px -8px rgba(0,0,0,0.04);
-    }
-    .btn-outline:hover { background: #1a2b4c; color: #fff; box-shadow: 0 12px 24px -10px rgba(20, 60, 140, 0.2); }
-
-    .hero-avatar {
-      flex: 0 0 180px;
-      display: flex;
-      justify-content: center;
-    }
-    .avatar-clay {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: #eaf1fc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 5.5rem;
-      color: #1a2b4c;
-      box-shadow: 
-        0 24px 40px -14px rgba(30, 60, 120, 0.2),
-        inset 0 -8px 16px rgba(255, 255, 255, 0.8),
-        inset 0 12px 24px rgba(255, 255, 255, 0.9);
-      border: 3px solid rgba(255, 255, 255, 0.6);
-      transition: all 0.3s ease;
-      overflow: hidden;
-      animation: floatAvatar 6s ease-in-out infinite;
-    }
-    @keyframes floatAvatar {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-    .avatar-clay img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-
-    /* ===== PROJECTS ===== */
-    .section-title {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #0e1a2e;
-      padding-left: 0.8rem;
-      margin-bottom: 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .section-title i { color: #3a6aaa; font-size: 1.8rem; }
-
-    .project-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.8rem;
-    }
-    .project-card {
-      padding: 1.8rem 1.5rem 2rem;
-      background: #f5faff;
-      border-radius: 3rem;
-      box-shadow: 
-        0 12px 24px -10px rgba(30, 60, 120, 0.08),
-        inset 0 -6px 12px rgba(255, 255, 255, 0.7),
-        inset 0 6px 14px rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      text-align: center;
-    }
-    .project-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 28px 44px -16px rgba(30, 60, 120, 0.18), inset 0 -6px 12px rgba(255, 255, 255, 0.8);
-    }
-    .project-card i {
-      font-size: 2.8rem;
-      color: #1a2b4c;
-      background: rgba(255, 255, 255, 0.4);
-      padding: 0.8rem;
-      border-radius: 2rem;
-      margin-bottom: 1.2rem;
-      box-shadow: inset 0 -2px 8px rgba(255, 255, 255, 0.6);
-    }
-    .project-card h3 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #0e1a2e;
-      margin-bottom: 0.4rem;
-    }
-    .project-card p {
-      color: #2a3f62;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-    .project-tag {
-      display: inline-block;
-      margin-top: 1rem;
-      background: #1a2b4c;
-      padding: 0.3rem 1.4rem;
-      border-radius: 3rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* ===== ABOUT ===== */
-    .about-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2.5rem;
-      align-items: flex-start;
-    }
-    .about-photo { flex: 0 0 170px; display: flex; justify-content: center; }
-    .about-photo .avatar-clay { width: 160px; height: 160px; animation: floatAvatar 7s ease-in-out infinite; }
-    .about-text { flex: 2 1 300px; }
-    .about-text h3 {
-      font-size: 1.8rem;
-      color: #0e1a2e;
-      margin-bottom: 0.8rem;
-      font-weight: 700;
-    }
-    .about-text p {
-      color: #1a2f4a;
-      font-size: 1.05rem;
-      line-height: 1.8;
-      max-width: 620px;
-    }
-    .about-details {
-      flex: 1 1 220px;
-      background: #f5faff;
-      padding: 1.8rem 2rem;
-      border-radius: 3.2rem;
-      box-shadow: 
-        0 12px 24px -10px rgba(30, 60, 120, 0.08),
-        inset 0 -6px 12px rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-    .about-details p {
-      color: #1a2f4a;
-      margin: 1rem 0;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 1rem;
-    }
-    .about-details i { width: 2rem; color: #3a6aaa; font-size: 1.3rem; }
-
-    /* ===== CONTACT ===== */
-    .contact-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2.5rem;
-    }
-    .contact-info {
-      flex: 1 1 250px;
-      background: #f5faff;
-      padding: 2rem 2.2rem;
-      border-radius: 3.2rem;
-      box-shadow: 0 12px 24px -10px rgba(30, 60, 120, 0.08), inset 0 -6px 12px rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-    .contact-info h3 {
-      color: #0e1a2e;
-      margin-bottom: 1.4rem;
-      font-size: 1.4rem;
-    }
-    .contact-info p {
-      color: #1a2f4a;
-      margin: 1.2rem 0;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 1rem;
-    }
-    .contact-info i { width: 2rem; color: #3a6aaa; font-size: 1.3rem; }
-    .contact-info a {
-      color: #1a2b4c;
-      text-decoration: none;
-      border-bottom: 1.5px solid transparent;
-      transition: 0.2s;
-    }
-    .contact-info a:hover { border-bottom-color: #3a6aaa; }
-
-    .contact-form {
-      flex: 2 1 320px;
-      background: #f5faff;
-      padding: 2rem 2.2rem;
-      border-radius: 3.2rem;
-      box-shadow: 0 12px 24px -10px rgba(30, 60, 120, 0.08), inset 0 -6px 12px rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-    .contact-form h3 {
-      color: #0e1a2e;
-      margin-bottom: 1.4rem;
-      font-size: 1.4rem;
-    }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-group label {
-      display: block;
-      color: #1a2f4a;
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 0.3rem;
-    }
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 0.9rem 1.4rem;
-      border-radius: 3.5rem;
-      background: #ffffff;
-      border: 1px solid rgba(26, 43, 76, 0.08);
-      color: #0e1a2e;
-      font-size: 1rem;
-      transition: 0.2s;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
-    }
-    .form-group input:focus, .form-group textarea:focus {
-      outline: none;
-      border-color: #3a6aaa;
-      box-shadow: 0 0 0 4px rgba(58, 106, 170, 0.06), inset 0 2px 8px rgba(0,0,0,0.02);
-    }
-    .form-group textarea {
-      border-radius: 2rem;
-      min-height: 110px;
-      resize: vertical;
-    }
-    .form-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .form-row .form-group { flex: 1 1 150px; }
-
-    /* ===== FOOTER ===== */
-    .footer-clay {
-      margin-top: 3rem;
-      padding: 1.2rem 1.8rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 4rem;
-      background: #f5faff;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 12px 24px -10px rgba(30, 60, 120, 0.06), inset 0 -4px 8px rgba(255, 255, 255, 0.6);
-    }
-    .footer-clay p { color: #1a2f4a; font-size: 0.95rem; }
-    .social-links { display: flex; gap: 1.2rem; }
-    .social-links a {
-      color: #1a2b4c;
-      font-size: 1.5rem;
-      transition: all 0.2s ease;
-      width: 3rem;
-      height: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 3rem;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(2px);
-      box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-    .social-links a:hover {
-      background: #1a2b4c;
-      color: #ffffff;
-      transform: translateY(-4px) scale(1.05);
-      box-shadow: 0 12px 24px -10px rgba(20, 60, 140, 0.2);
-    }
-
-    /* ===== RESPONSIVE (hamburger) ===== */
-    @media (max-width: 820px) {
-      .hamburger { display: flex; }
-      .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background: #f5faff;
-        padding: 1.2rem 1rem;
-        border-radius: 2.5rem;
-        margin-top: 0.8rem;
-        box-shadow: 0 16px 32px -12px rgba(30, 60, 120, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        gap: 0.4rem;
+<html class="dark scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>UTSHAV KATUWAL — Software Developer &amp; Cybersecurity</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            bg: "#080A0D",
+            surface: "#11161C",
+            "surface-subtle": "#101419",
+            border: "#252B33",
+            accent: "#4F8CFF",
+            "accent-hover": "#3B7CE8",
+            "text-primary": "#F2F4F7",
+            "text-secondary": "#929AA5",
+            "text-muted": "#69727D"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
       }
-      .nav-links.open { display: flex; }
-      .nav-links a {
-        width: 100%;
-        text-align: center;
-        padding: 0.8rem;
-        font-size: 1rem;
+    };
+  </script>
+<style>
+    @layer base {
+      html, body {
+        background-color: #080A0D;
+        color: #F2F4F7;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
       }
-      .header-wrap { flex-wrap: wrap; padding: 0.6rem 1.2rem; }
+      .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+      .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
     }
-
-    @media (max-width: 680px) {
-      .clay-card { padding: 1.2rem 0.8rem; border-radius: 3rem; }
-      .hero-content h2 { font-size: 2.4rem; }
-      .hero-avatar { flex: 1 1 100%; justify-content: center; }
-      .avatar-clay { width: 140px; height: 140px; font-size: 4.2rem; }
-      .about-photo { flex: 1 1 100%; justify-content: center; }
-      .about-photo .avatar-clay { width: 140px; height: 140px; }
-      .project-grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-      .contact-wrapper { flex-direction: column; }
-      .form-row { flex-direction: column; }
-      .footer-clay { flex-direction: column-reverse; gap: 1rem; text-align: center; }
-    }
-    @media (max-width: 450px) {
-      .project-grid { grid-template-columns: 1fr; }
-      .btn-clay { width: 100%; justify-content: center; }
-      .cta-group { flex-direction: column; width: 100%; }
-      .hero-content h2 { font-size: 2rem; }
-      .logo h1 { font-size: 1.6rem; }
-    }
+    ::-webkit-scrollbar { display: none; }
   </style>
 </head>
-<body>
-
-<div class="clay-card">
-
-  <!-- HEADER with HAMBURGER -->
-  <div class="header-wrap">
-    <div class="logo">
-      <h1><i class="fas fa-shield"></i> Utshav<span>.</span></h1>
-    </div>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="nav-links" id="navLinks">
-      <a href="#" class="active" data-page="home"><i class="fas fa-house"></i> Home</a>
-      <a href="#" data-page="projects"><i class="fas fa-folder"></i> Work</a>
-      <a href="#" data-page="about"><i class="fas fa-address-card"></i> About</a>
-      <a href="#" data-page="contact"><i class="fas fa-envelope"></i> Contact</a>
-    </div>
-  </div>
-
-  <!-- ========== PAGES ========== -->
-  <!-- HOME -->
-  <div id="page-home" class="page active">
-    <div class="hero">
-      <div class="hero-content">
-        <div class="badge"><i class="fas fa-code"></i>  full-stack · security</div>
-        <h2><i class="fas fa-hand-peace"></i> Utshav Katuwal</h2>
-        <p>Full-stack developer & cybersecurity expert. Building resilient digital solutions with a modern, soft touch.</p>
-        <div class="cta-group">
-          <button class="btn-clay" onclick="switchPage('projects')"><i class="fas fa-cubes"></i> View Work</button>
-          <button class="btn-clay btn-outline" onclick="switchPage('contact')"><i class="fas fa-arrow-right"></i> Contact</button>
-        </div>
-      </div>
-      <div class="hero-avatar">
-        <div class="avatar-clay">
-          <img src="pfp.jpeg">
-        </div>
-      </div>
-    </div>
-    <!-- highlight bar with animations -->
-    <div style="margin-top: 1.8rem; padding: 0.8rem 1.5rem; background: #f5faff; border-radius: 4rem; border:1px solid rgba(255,255,255,0.5); box-shadow: inset 0 -4px 8px rgba(255,255,255,0.6);">
-      <p style="color:#1a2f4a; display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; font-weight:500; font-size:0.95rem;">
-        <span><i class="fas fa-laptop-code" style="color:#3a6aaa; margin-right: 6px;"></i> Full Stack Dev</span>
-        <span><i class="fas fa-shield" style="color:#3a6aaa; margin-right: 6px;"></i> Cyber Security</span>
-        <span><i class="fas fa-cloud" style="color:#3a6aaa; margin-right: 6px;"></i> Cloud & DevOps</span>
-        <span><i class="fas fa-database" style="color:#3a6aaa; margin-right: 6px;"></i> Data Engineering</span>
-      </p>
-    </div>
-  </div>
-
-  <!-- PROJECTS -->
-  <div id="page-projects" class="page">
-    <div class="section-title"><i class="fas fa-cubes"></i> featured projects</div>
-    <div class="project-grid">
-      <div class="project-card">
-        <i class="fas fa-shield-halved"></i>
-        <h3>SecureAuth Pro</h3>
-        <p>MFA, zero-trust & adaptive authentication layer for enterprise.</p>
-        <span class="project-tag">Security</span>
-      </div>
-      <div class="project-card">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <h3>NimbusStack</h3>
-        <p>Full-stack deployment pipeline with CI/CD, monitoring & auto-scaling.</p>
-        <span class="project-tag">DevOps</span>
-      </div>
-      <div class="project-card">
-        <i class="fas fa-robot"></i>
-        <h3>ThreatIntel AI</h3>
-        <p>AI-driven threat detection dashboard with real-time alerts.</p>
-        <span class="project-tag">ML + Security</span>
-      </div>
-      <div class="project-card">
-        <i class="fas fa-store"></i>
-        <h3>EcoMart Global</h3>
-        <p>E‑commerce platform with real-time inventory, analytics & payment.</p>
-        <span class="project-tag">Full Stack</span>
-      </div>
-      <div class="project-card">
-        <i class="fas fa-database"></i>
-        <h3>DataVault X</h3>
-        <p>Encrypted data storage & secure sharing with blockchain audit.</p>
-        <span class="project-tag">Crypto</span>
-      </div>
-      <div class="project-card">
-        <i class="fas fa-code-branch"></i>
-        <h3>DevSecOps Pipeline</h3>
-        <p>Automated security scanning, SAST, DAST integrated in CI/CD.</p>
-        <span class="project-tag">CI/CD</span>
-      </div>
-    </div>
-    <!-- extra content -->
-    <div style="margin-top: 2rem; padding: 1.5rem 2rem; background: #f5faff; border-radius: 3rem; border:1px solid rgba(255,255,255,0.5); box-shadow: inset 0 -4px 8px rgba(255,255,255,0.6);">
-      <p style="color:#1a2f4a; font-size:1rem; display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;">
-        <span><i class="fas fa-check-circle" style="color:#3a6aaa;"></i> 15+ successful projects</span>
-        <span><i class="fas fa-check-circle" style="color:#3a6aaa;"></i> 10+ happy clients</span>
-        <span><i class="fas fa-check-circle" style="color:#3a6aaa;"></i> 4 industry awards</span>
-      </p>
-    </div>
-  </div>
-
-  <!-- ABOUT -->
-  <div id="page-about" class="page">
-    <div class="about-grid">
-      <div class="about-photo">
-        <div class="avatar-clay">
-          <img src="pfp.jpeg">
-        </div>
-      </div>
-      <div class="about-text">
-        <h3><i class="fas fa-user-tie" style="color:#3a6aaa; margin-right: 12px;"></i>About Utshav</h3>
-        <p>I'm a full-stack developer and cybersecurity specialist based in Ilam, Nepal. With a passion for building secure, scalable applications, I blend modern development practices with a strong security mindset. I enjoy crafting clean interfaces and robust backends that stand up to real-world threats.</p>
-        <p style="margin-top: 1rem;"><i class="fas fa-graduation-cap" style="color:#3a6aaa; margin-right: 10px;"></i> BCS Cybersecurity(HONS) - IIMS(Taylor's University) Ongoing</p>
-        <p style="margin-top: 0.4rem;"><i class="fas fa-heart" style="color:#3a6aaa; margin-right: 10px;"></i> Open source contributor, CTF challenges, and modern UI/UX.</p>
-        <p style="margin-top: 0.4rem;"><i class="fas fa-award" style="color:#3a6aaa; margin-right: 10px;"></i> 6+ years experience · 20+ projects delivered · 3x hackathon winner</p>
-      </div>
-      <div class="about-details">
-        <p><i class="fas fa-map-pin"></i> Ilam, Nepal</p>
-        <p><i class="fas fa-phone"></i> +977 9700169343</p>
-        <p><i class="fas fa-envelope"></i> utshavkatuwal@gmail.com</p>
-        <p><i class="fas fa-globe"></i> utshavkatuwal.com.np</p>
-        <p><i class="fas fa-shield"></i> Security · Full Stack · Cloud</p>
-        <p><i class="fas fa-clock"></i> Available for freelance & audits</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTACT -->
-  <div id="page-contact" class="page">
-    <div class="section-title"><i class="fas fa-address-book"></i> get in touch</div>
-    <div class="contact-wrapper">
-      <div class="contact-info">
-        <h3><i class="fas fa-paper-plane" style="color:#3a6aaa; margin-right:8px;"></i>Reach me</h3>
-        <p><i class="fas fa-envelope"></i> <a href="mailto:utshavkatuwal@gmail.com">utshavkatuwal@gmail.com</a></p>
-        <p><i class="fas fa-phone"></i> <a href="tel:9700169343">+977 9700169343</a></p>
-        <p><i class="fas fa-map-marker-alt"></i> Ilam, Nepal</p>
-        <p><i class="fab fa-github"></i> <a href="#">github.com/utshavkatuwal</a></p>
-        <p><i class="fab fa-linkedin"></i> <a href="#">linkedin.com/in/utshav-katuwal-69184b416/</a></p>
-        <p><i class="fab fa-twitter"></i> <a href="#">@utshav_katuwal</a></p>
-        <p style="margin-top:1.5rem; color:#1a2f4a; font-size:0.95rem;"><i class="fas fa-clock" style="color:#3a6aaa;"></i> Available for freelance, collaborations & security audits.</p>
-      </div>
-      <div class="contact-form">
-        <h3><i class="fas fa-message" style="color:#3a6aaa; margin-right:8px;"></i>Send a message</h3>
-        <form id="contactForm" onsubmit="event.preventDefault(); alert('Thanks! I\'ll get back to you soon.');">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Your Name</label>
-              <input type="text" id="name" placeholder="John Doe" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" placeholder="john@example.com" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="subject">Subject</label>
-            <input type="text" id="subject" placeholder="Project inquiry / collaboration">
-          </div>
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea id="message" placeholder="Tell me about your project, security audit, or idea..." required></textarea>
-          </div>
-          <button type="submit" class="btn-clay" style="width:100%; justify-content:center; margin-top:0.5rem;"><i class="fas fa-paper-plane"></i> Send Message</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer-clay">
-    <p><i class="fas fa-copyright" style="opacity:0.6;"></i> 2026 Utshav Katuwal</p>
-    <div class="social-links">
-      <a href="https://github.com/utshavkatuwal"><i class="fab fa-github"></i></a>
-      <a href="https://linkedin.com/in/utshav-katuwal-69184b416/"><i class="fab fa-linkedin-in"></i></a>
-      <a href="https://x.com/UtshavKatu48833"><i class="fab fa-twitter"></i></a>
-      <a href="https://www.instagram.com/utshavkatuwal/"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.youtube.com/@UtshavKatuwal"><i class="fab fa-youtube"></i></a>
-    </div>
-  </div>
-
+<body class="bg-[#080A0D] text-[#F2F4F7] font-sans antialiased selection:bg-[#4F8CFF] selection:text-[#080A0D] flex flex-col min-h-screen">
+<!-- Top Header (All Screens) -->
+<header class="fixed top-0 inset-x-0 z-50 pt-safe bg-[#080A0D] border-b border-[#252B33]">
+<div class="max-w-7xl mx-auto h-14 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+<a class="flex items-center gap-3 group" href="#">
+<div class="w-8 h-8 rounded-full border border-[#252B33] overflow-hidden shrink-0">
+<img alt="Utshav Katuwal" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK_5-80_k7M1jQn6oklNhhk1YrgCwqGF3AoyI37Wb_VYxcJQLisOXy-LVXQOoYFJ4muIL9D1XO8ul0Dlx9MIcy4dNCYtTQ55yR5Aj-dZ9nl-qNNlO1eF47Z7N7QUdpnGrhxhF-nfaFp1iB4MWFTdL9bJ6O5ndwE21HmgWBnFZkKutREpVeLVHFfaZuOS8z6Wyq9U8_9h9lxocoZULIQBesEKU9sn6ETg28AFgSige7iIN7_q5GjHcB5zgpj1REuKbv5Q"/>
 </div>
+<span class="font-bold tracking-wider text-xs sm:text-sm font-mono text-[#F2F4F7] uppercase group-hover:text-[#4F8CFF] transition-colors">
+          UTSHAV KATUWAL
+        </span>
+</a>
+<div class="flex items-center gap-2">
+<a class="px-2.5 py-1.5 rounded bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/60 hover:bg-[#151B22] text-[#F2F4F7] text-xs font-mono flex items-center gap-1.5 transition-colors" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[15px] text-[#4F8CFF]">code</span>
+<span>GitHub</span>
+</a>
+</div>
+</div>
+</header>
 
-<script>
-  // Hamburger toggle
-  const hamburger = document.getElementById('hamburgerBtn');
-  const navLinks = document.getElementById('navLinks');
-
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navLinks.classList.toggle('open');
-  });
-
-  // Page switching
-  const navLinkItems = document.querySelectorAll('#navLinks a');
-  const pages = {
-    home: document.getElementById('page-home'),
-    projects: document.getElementById('page-projects'),
-    about: document.getElementById('page-about'),
-    contact: document.getElementById('page-contact')
-  };
-
-  function switchPage(pageId) {
-    Object.values(pages).forEach(p => p.classList.remove('active'));
-    if (pages[pageId]) pages[pageId].classList.add('active');
-    navLinkItems.forEach(link => {
-      link.classList.remove('active');
-      if (link.dataset.page === pageId) link.classList.add('active');
-    });
-    hamburger.classList.remove('active');
-    navLinks.classList.remove('open');
-    document.querySelector('.clay-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  navLinkItems.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = link.dataset.page;
-      if (page) switchPage(page);
-    });
-  });
-
-  window.switchPage = switchPage;
-</script>
-
-</body>
-</html>
+<!-- Sticky Nav Bar (Desktop Only) -->
+<nav class="hidden md:sticky md:top-14 md:z-40 bg-[#080A0D] border-b border-[#252B33]">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center gap-1 overflow-x-auto pb-0.5" role="navigation" aria-label="Main sections">
+<a class="px-3 py-2.5 whitespace-nowrap rounded-lg text-xs font-mono text-[#929AA5] hover:bg-[#11161C] hover:text-[#F2F4F7] hover:border-b-2 hover:border-[#4F8CFF] transition-all" href="#about">About</a>
+<a class="px-3 py-2.5 whitespace-nowrap rounded-lg text-xs font-mono text-[#929AA5] hover:bg-[#11161C] hover:text-[#F2F4F7] hover:border-b-2 hover:border-[#4F8CFF] transition-all" href="#projects">Projects</a>
+<a class="px-3 py-2.5 whitespace-nowrap rounded-lg text-xs font-mono text-[#929AA5] hover:bg-[#11161C] hover:text-[#F2F4F7] hover:border-b-2 hover:border-[#4F8CFF] transition-all" href="#skills">Skills</a>
+<a class="px-3 py-2.5 whitespace-nowrap rounded-lg text-xs font-mono text-[#929AA5] hover:bg-[#11161C] hover:text-[#F2F4F7] hover:border-b-2 hover:border-[#4F8CFF] transition-all" href="#education">Education</a>
+<a class="px-3 py-2.5 whitespace-nowrap rounded-lg text-xs font-mono text-[#929AA5] hover:bg-[#11161C] hover:text-[#F2F4F7] hover:border-b-2 hover:border-[#4F8CFF] transition-all" href="#contact">Contact</a>
+</div>
+</div>
+</nav>
+<!-- Main Container -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-24 flex flex-col gap-14 sm:gap-16 lg:gap-20">
+<!-- HERO SECTION -->
+<section class="flex flex-col gap-6 pt-2 lg:pt-8">
+<div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 lg:gap-12">
+<div class="flex flex-col gap-1.5 lg:max-w-2xl">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs sm:text-sm lg:text-base text-[#4F8CFF] font-semibold tracking-wider uppercase">PORTFOLIO</span>
+<span class="text-[#252B33]">/</span>
+<span class="font-mono text-xs sm:text-sm lg:text-base text-[#929AA5]">SYSTEMS & DEV</span>
+</div>
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#F2F4F7] uppercase leading-tight">
+            UTSHAV KATUWAL
+          </h1>
+<p class="text-base sm:text-lg lg:text-xl font-semibold text-[#F2F4F7]">
+            Software Developer · Cybersecurity Student
+          </p>
+<p class="font-mono text-xs sm:text-sm lg:text-base text-[#929AA5]">
+            Full-Stack Development · Cybersecurity · Systems | Based in Ilam, Nepal
+          </p>
+<!-- Action CTAs -->
+<div class="flex flex-wrap items-center gap-3 pt-2">
+<a class="px-6 py-3 bg-[#4F8CFF] hover:bg-[#3B7CE8] text-[#080A0D] font-bold text-sm lg:text-base rounded font-mono flex items-center gap-2 transition-colors" href="#projects">
+<span>Explore Projects</span>
+<span class="material-symbols-outlined text-[18px]">arrow_downward</span>
+</a>
+<a class="px-5 py-3 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/60 hover:bg-[#151B22] text-[#F2F4F7] text-sm lg:text-base rounded font-mono flex items-center gap-2 transition-colors" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px] text-[#4F8CFF]">code</span>
+<span>GitHub</span>
+</a>
+<a class="px-5 py-3 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/60 hover:bg-[#151B22] text-[#F2F4F7] text-sm lg:text-base rounded font-mono flex items-center gap-2 transition-colors" href="https://linkedin.com/in/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[18px] text-[#4F8CFF]">link</span>
+<span>LinkedIn</span>
+</a>
+</div>
+</div>
+<!-- Profile Card - Visible on all screens -->
+<div class="relative w-28 h-28 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-xl border border-[#252B33] p-1.5 bg-[#11161C] shrink-0">
+<img alt="Utshav Katuwal" class="w-full h-full rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7mnuxkjd1C6UUS64KuSgRJ8NFwF0SLvLgiGqxGVWlk1wmTR3q-4lB1_3dn8J3wal0yM7YKt4u0MRLJhpvgRq8pxf2vKDxarDO_kaEzjcGRrN2xUEdeLiG3We72iQaaCxmWkUcoXxinKEASXgdpcxHD64FR5YtRmBhrpyAahIE8pEQaQIxLiRapys2YZtVwGQt4uqRvj3HV2Ls412bVv17LoSLTKwQa4MY65IRH1Bd0eRzB-I0ipIrvn0Dw1tnRwcEaw"/>
+<div class="absolute -bottom-1.5 -right-1.5 w-4 h-4 lg:w-5 lg:h-5 rounded-full bg-[#080A0D] flex items-center justify-center">
+<span class="w-3 h-3 lg:w-3.5 lg:h-3.5 rounded-full bg-[#4F8CFF]"></span>
+</div>
+</div>
+</div>
+<!-- Core Statement Card - Full Width on Desktop -->
+<div class="p-6 bg-[#11161C] border border-[#252B33] rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-base sm:text-lg lg:text-xl">
+<p class="text-[#F2F4F7] font-medium leading-relaxed max-w-3xl">
+          Building practical software while developing strong foundations in cybersecurity, systems, and secure engineering.
+        </p>
+<p class="text-[#929AA5] leading-relaxed max-w-2xl shrink-0">
+          Focused on building resilient applications, dissecting network protocols, configuring hardened Linux environments, and applying security-first architectural practices.
+        </p>
+</div>
+</section>
+<!-- 01 — ABOUT -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]" id="about">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">01 — ABOUT</span>
+<span class="font-mono text-xs text-[#69727D] uppercase">BACKGROUND & FOCUS</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+<!-- About Text -->
+<div class="lg:col-span-1">
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7] mb-4">About Me</h2>
+<div class="bg-[#11161C] border border-[#252B33] p-5 sm:p-6 lg:p-8 rounded-xl h-full">
+<p class="text-sm sm:text-base lg:text-lg text-[#929AA5] leading-relaxed">
+          I'm Utshav Katuwal, a BCS Cybersecurity student from Nepal with a strong interest in software development, cybersecurity, and systems. I enjoy building practical applications, understanding how systems work, and exploring how software can be designed and secured. My current focus is strengthening my foundations in programming, web development, Linux, networking, cybersecurity, and modern software engineering.
+        </p>
+</div>
+</div>
+<!-- Four Focus Cards - 2x2 Grid on Desktop -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-5 lg:col-span-2">
+<!-- 1. Software Development -->
+<div class="bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 p-5 lg:p-6 rounded-xl flex flex-col gap-3 transition-colors duration-200">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-medium">AREA 01</span>
+<span class="material-symbols-outlined text-[20px] lg:text-[24px] text-[#4F8CFF]">terminal</span>
+</div>
+<h3 class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Software Development</h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+            Practical web and desktop systems engineered in modern tech stacks, emphasizing clean architecture, modularity, and operational reliability.
+          </p>
+</div>
+<!-- 2. Cybersecurity -->
+<div class="bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 p-5 lg:p-6 rounded-xl flex flex-col gap-3 transition-colors duration-200">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-medium">AREA 02</span>
+<span class="material-symbols-outlined text-[20px] lg:text-[24px] text-[#4F8CFF]">shield</span>
+</div>
+<h3 class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Cybersecurity</h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+            Application security (AppSec), protocol inspection, defensive system hardening, raw networking, and secure coding fundamentals.
+          </p>
+</div>
+<!-- 3. Cloud & DevOps -->
+<div class="bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 p-5 lg:p-6 rounded-xl flex flex-col gap-3 transition-colors duration-200">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-medium">AREA 03</span>
+<span class="material-symbols-outlined text-[20px] lg:text-[24px] text-[#4F8CFF]">deployed_code</span>
+</div>
+<h3 class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Cloud & DevOps</h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+            Containerization with Docker, deployment automation pipelines, reproducible infrastructure setups, and DevSecOps best practices.
+          </p>
+</div>
+<!-- 4. Problem Solving -->
+<div class="bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 p-5 lg:p-6 rounded-xl flex flex-col gap-3 transition-colors duration-200">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-medium">AREA 04</span>
+<span class="material-symbols-outlined text-[20px] lg:text-[24px] text-[#4F8CFF]">account_tree</span>
+</div>
+<h3 class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Problem Solving</h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+            Hands-on engineering through iterative building, analytical debugging, systems architecture design, and systematic edge-case resolution.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 02 — FEATURED PROJECTS -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]" id="projects">
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<div>
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">02 — PROJECTS</span>
+</div>
+<div>
+<span class="font-mono text-xs text-[#69727D] uppercase">FEATURED WORK</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7]">Featured Projects</h2>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5]">Practical systems built to solve real-world problems with rigorous engineering.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6">
+<!-- Project 1: RepairConnect -->
+<article class="bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 rounded-xl overflow-hidden flex flex-col transition-colors duration-200">
+<div class="p-5 lg:p-6 border-b border-[#252B33] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold">01 / REPAIRCONNECT</span>
+<span class="font-mono text-[11px] text-[#929AA5] px-2 py-0.5 bg-[#101419] border border-[#252B33] rounded">Full-Stack</span>
+</div>
+<h3 class="text-lg lg:text-xl font-bold text-[#F2F4F7]">RepairConnect</h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+              Service marketplace platform connecting customers with verified technicians based on dynamic service requirements with transparent billing and geolocation.
+            </p>
+</div>
+<div class="p-5 lg:p-6 bg-[#101419] flex flex-col gap-4 flex-1">
+<div class="flex flex-wrap gap-1.5">
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">React</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">JavaScript</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">PHP</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">MySQL</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">Maps API</span>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-[#252B33]">
+<div class="flex items-center gap-2 text-xs sm:text-sm font-mono text-[#69727D]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4F8CFF]"></span>
+<span>Marketplace & Geolocation Engine</span>
+</div>
+<a class="font-mono text-xs sm:text-sm text-[#4F8CFF] hover:underline flex items-center gap-1" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span>View Source</span>
+<span class="material-symbols-outlined text-[14px] sm:text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Project 2: School LMS -->
+<article class="bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 rounded-xl overflow-hidden flex flex-col transition-colors duration-200">
+<div class="p-5 lg:p-6 border-b border-[#252B33] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold">02 / SCHOOL LMS</span>
+<span class="font-mono text-[11px] text-[#929AA5] px-2 py-0.5 bg-[#101419] border border-[#252B33] rounded">Enterprise EdTech</span>
+</div>
+<h3 class="text-lg lg:text-xl font-bold text-[#F2F4F7]">School LMS</h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+              School management and learning platform covering admissions, students, teachers, accounts, fees, classes, sections, and administrative workflows with dual internal-external network design.
+            </p>
+</div>
+<div class="p-5 lg:p-6 bg-[#101419] flex flex-col gap-4 flex-1">
+<div class="flex flex-wrap gap-1.5">
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">PHP</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">MySQL</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">REST APIs</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">Subnet Architecture</span>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-[#252B33]">
+<div class="flex items-center gap-2 text-xs sm:text-sm font-mono text-[#69727D]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4F8CFF]"></span>
+<span>Segmented Security Architecture</span>
+</div>
+<a class="font-mono text-xs sm:text-sm text-[#4F8CFF] hover:underline flex items-center gap-1" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span>View Source</span>
+<span class="material-symbols-outlined text-[14px] sm:text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Project 3: Jarvis -->
+<article class="bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 rounded-xl overflow-hidden flex flex-col transition-colors duration-200">
+<div class="p-5 lg:p-6 border-b border-[#252B33] flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold">03 / JARVIS</span>
+<span class="font-mono text-[11px] text-[#929AA5] px-2 py-0.5 bg-[#101419] border border-[#252B33] rounded">Desktop Automation</span>
+</div>
+<h3 class="text-lg lg:text-xl font-bold text-[#F2F4F7]">Jarvis</h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+              Personal desktop assistant focused on voice interaction, system-level automation, process dispatching, and desktop control via Python subsystems.
+            </p>
+</div>
+<div class="p-5 lg:p-6 bg-[#101419] flex flex-col gap-4 flex-1">
+<div class="flex flex-wrap gap-1.5">
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">Python</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">Speech Recognition</span>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] bg-[#11161C] border border-[#252B33] px-2.5 py-1 rounded">Desktop Automation</span>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-[#252B33]">
+<div class="flex items-center gap-2 text-xs sm:text-sm font-mono text-[#69727D]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4F8CFF]"></span>
+<span>Local Voice Engine</span>
+</div>
+<a class="font-mono text-xs sm:text-sm text-[#4F8CFF] hover:underline flex items-center gap-1" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span>View Source</span>
+<span class="material-symbols-outlined text-[14px] sm:text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- 03 — GITHUB & OPEN SOURCE -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]">
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<div>
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">03 — GITHUB</span>
+</div>
+<div>
+<span class="font-mono text-xs text-[#69727D] uppercase">OPEN SOURCE</span>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+<div>
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7]">Building in Public</h2>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5]">Open source repositories, utilities, and security exploration modules.</p>
+</div>
+<a class="font-mono text-xs sm:text-sm text-[#4F8CFF] hover:underline flex items-center gap-1 self-start lg:self-auto" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span>github.com/utshavkatuwal</span>
+<span class="material-symbols-outlined text-[14px] sm:text-[16px]">open_in_new</span>
+</a>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-5">
+<!-- Repo 1 -->
+<a class="p-4 lg:p-5 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 hover:bg-[#151B22] rounded-xl transition-colors flex flex-col gap-2 group" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] lg:text-[22px] text-[#4F8CFF]">folder</span>
+<span class="font-mono text-xs sm:text-sm lg:text-base font-semibold text-[#F2F4F7] group-hover:text-[#4F8CFF] transition-colors">network-packet-analyzer</span>
+</div>
+<span class="font-mono text-[11px] sm:text-xs text-[#929AA5] px-2.5 py-1 bg-[#101419] border border-[#252B33] rounded">Python</span>
+</div>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+            Low-level packet parsing utility analyzing Ethernet frames, IP packet headers, and TCP/UDP transport metrics via raw sockets.
+          </p>
+</a>
+<!-- Repo 2 -->
+<a class="p-4 lg:p-5 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 hover:bg-[#151B22] rounded-xl transition-colors flex flex-col gap-2 group" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] lg:text-[22px] text-[#4F8CFF]">folder</span>
+<span class="font-mono text-xs sm:text-sm lg:text-base font-semibold text-[#F2F4F7] group-hover:text-[#4F8CFF] transition-colors">secure-auth-service</span>
+</div>
+<span class="font-mono text-[11px] sm:text-xs text-[#929AA5] px-2.5 py-1 bg-[#101419] border border-[#252B33] rounded">PHP / MySQL</span>
+</div>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+            Role-based authorization and session management service implementing salted cryptographic hashing, JWT claims, and endpoint rate-limiting.
+          </p>
+</a>
+<!-- Repo 3 -->
+<a class="p-4 lg:p-5 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/50 hover:bg-[#151B22] rounded-xl transition-colors flex flex-col gap-2 group" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] lg:text-[22px] text-[#4F8CFF]">folder</span>
+<span class="font-mono text-xs sm:text-sm lg:text-base font-semibold text-[#F2F4F7] group-hover:text-[#4F8CFF] transition-colors">linux-system-monitor</span>
+</div>
+<span class="font-mono text-[11px] sm:text-xs text-[#929AA5] px-2.5 py-1 bg-[#101419] border border-[#252B33] rounded">Bash / Python</span>
+</div>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+            Lightweight CLI observability daemon extracting real-time kernel metrics, memory utilization, and open listening sockets directly from /proc.
+          </p>
+</a>
+</div>
+</section>
+<!-- 04 — TECHNICAL SKILLS -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]" id="skills">
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<div>
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">04 — SKILLS</span>
+</div>
+<div>
+<span class="font-mono text-xs text-[#69727D] uppercase">TECHNICAL STACK</span>
+</div>
+</div>
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7]">Technical Skills</h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
+<!-- Development -->
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs sm:text-sm text-[#4F8CFF] uppercase font-semibold">Development</span>
+<span class="font-mono text-[11px] sm:text-xs text-[#69727D]">Core Languages & UI</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Python</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">JavaScript</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">PHP</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">C++</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">React</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">HTML</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">CSS</span>
+</div>
+</div>
+<!-- Cybersecurity -->
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs sm:text-sm text-[#4F8CFF] uppercase font-semibold">Cybersecurity</span>
+<span class="font-mono text-[11px] sm:text-xs text-[#69727D]">Defense & Systems</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Linux</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Networking</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Web Security</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Ethical Hacking</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Security Fundamentals</span>
+</div>
+</div>
+<!-- Infrastructure -->
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs sm:text-sm text-[#4F8CFF] uppercase font-semibold">Infrastructure</span>
+<span class="font-mono text-[11px] sm:text-xs text-[#69727D]">Automation & Ops</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Git</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">GitHub</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Docker</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Cloud</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">DevOps</span>
+</div>
+</div>
+<!-- Tools -->
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-mono text-xs sm:text-sm text-[#4F8CFF] uppercase font-semibold">Tools</span>
+<span class="font-mono text-[11px] sm:text-xs text-[#69727D]">Workflow & Workspace</span>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">VS Code</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Git</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">GitHub</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">XAMPP</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Linux</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 05 — LEARNING JOURNEY -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]">
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<div>
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">05 — TIMELINE</span>
+</div>
+<div>
+<span class="font-mono text-xs text-[#69727D] uppercase">LEARNING JOURNEY</span>
+</div>
+</div>
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7]">Learning Journey</h2>
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6">
+<!-- Mobile: Vertical Timeline | Desktop: Horizontal Timeline -->
+<div class="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
+<!-- Stage 1 -->
+<div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-5 relative lg:flex-1 min-w-0">
+<div class="flex flex-col items-center lg:flex-shrink-0">
+<div class="w-6 h-6 lg:w-8 lg:h-8 rounded bg-[#101419] border border-[#252B33] flex items-center justify-center font-mono text-xs lg:text-sm text-[#929AA5]">01</div>
+<div class="hidden lg:block w-[1px] bg-[#252B33] h-8"></div>
+</div>
+<div class="flex flex-col gap-1 pt-0.5 lg:pt-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Early Programming</span>
+<span class="font-mono text-xs lg:text-sm text-[#4F8CFF]">QBASIC</span>
+</div>
+<span class="text-xs sm:text-sm lg:text-base text-[#929AA5]">First exploration into logical control structures and algorithmic thinking.</span>
+</div>
+</div>
+<!-- Stage 2 -->
+<div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-5 relative lg:flex-1 min-w-0">
+<div class="flex flex-col items-center lg:flex-shrink-0">
+<div class="w-6 h-6 lg:w-8 lg:h-8 rounded bg-[#101419] border border-[#252B33] flex items-center justify-center font-mono text-xs lg:text-sm text-[#929AA5]">02</div>
+<div class="hidden lg:block w-[1px] bg-[#252B33] h-8"></div>
+</div>
+<div class="flex flex-col gap-1 pt-0.5 lg:pt-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Foundations</span>
+<span class="font-mono text-xs lg:text-sm text-[#4F8CFF]">C++</span>
+</div>
+<span class="text-xs sm:text-sm lg:text-base text-[#929AA5]">Core data structures, memory model principles, pointers, and typed systems.</span>
+</div>
+</div>
+<!-- Stage 3 -->
+<div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-5 relative lg:flex-1 min-w-0">
+<div class="flex flex-col items-center lg:flex-shrink-0">
+<div class="w-6 h-6 lg:w-8 lg:h-8 rounded bg-[#101419] border border-[#252B33] flex items-center justify-center font-mono text-xs lg:text-sm text-[#929AA5]">03</div>
+<div class="hidden lg:block w-[1px] bg-[#252B33] h-8"></div>
+</div>
+<div class="flex flex-col gap-1 pt-0.5 lg:pt-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Web</span>
+<span class="font-mono text-xs lg:text-sm text-[#4F8CFF]">HTML · CSS · JS</span>
+</div>
+<span class="text-xs sm:text-sm lg:text-base text-[#929AA5]">Modern layouts, client runtime lifecycles, and interface state manipulation.</span>
+</div>
+</div>
+<!-- Stage 4 -->
+<div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-5 relative lg:flex-1 min-w-0">
+<div class="flex flex-col items-center lg:flex-shrink-0">
+<div class="w-6 h-6 lg:w-8 lg:h-8 rounded bg-[#101419] border border-[#252B33] flex items-center justify-center font-mono text-xs lg:text-sm text-[#929AA5]">04</div>
+<div class="hidden lg:block w-[1px] bg-[#252B33] h-8"></div>
+</div>
+<div class="flex flex-col gap-1 pt-0.5 lg:pt-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Backend</span>
+<span class="font-mono text-xs lg:text-sm text-[#4F8CFF]">PHP · MySQL</span>
+</div>
+<span class="text-xs sm:text-sm lg:text-base text-[#929AA5]">Relational schema design, transactional SQL, server APIs, and session security.</span>
+</div>
+</div>
+<!-- Stage 5 -->
+<div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-5 relative lg:flex-1 min-w-0">
+<div class="flex flex-col items-center lg:flex-shrink-0">
+<div class="w-6 h-6 lg:w-8 lg:h-8 rounded bg-[#101419] border border-[#252B33] flex items-center justify-center font-mono text-xs lg:text-sm text-[#929AA5]">05</div>
+<div class="hidden lg:block w-[1px] bg-[#252B33] h-8"></div>
+</div>
+<div class="flex flex-col gap-1 pt-0.5 lg:pt-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Python</span>
+<span class="font-mono text-xs lg:text-sm text-[#4F8CFF]">Automation</span>
+</div>
+<span class="text-xs sm:text-sm lg:text-base text-[#929AA5]">System automation scripting, voice synthesis wrappers, and process tools.</span>
+</div>
+</div>
+<!-- Stage 6: Current -->
+<div class="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-5 lg:flex-1 min-w-0">
+<div class="flex flex-col items-center lg:flex-shrink-0">
+<div class="w-6 h-6 lg:w-8 lg:h-8 rounded bg-[#4F8CFF] flex items-center justify-center font-mono text-xs lg:text-sm text-[#080A0D] font-bold">06</div>
+</div>
+<div class="flex flex-col gap-1 pt-0.5 lg:pt-0 flex-1">
+<div class="flex items-center gap-2">
+<span class="text-sm lg:text-base font-semibold text-[#F2F4F7]">Current Stage</span>
+<span class="font-mono text-xs lg:text-sm text-[#4F8CFF]">BCS Cybersecurity</span>
+</div>
+<span class="text-xs sm:text-sm lg:text-base text-[#929AA5]">Formal university degree training in systems architecture, networking, and threat defense.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 06 — EDUCATION -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]" id="education">
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<div>
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">06 — EDUCATION</span>
+</div>
+<div>
+<span class="font-mono text-xs text-[#69727D] uppercase">ACADEMICS</span>
+</div>
+</div>
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7]">Education</h2>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6">
+<!-- Degree Card -->
+<div class="lg:col-span-2 bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col gap-4">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2">
+<div>
+<h3 class="text-base sm:text-lg lg:text-xl font-bold text-[#F2F4F7]">
+              Bachelor of Computer Science (BCS) — Cybersecurity
+            </h3>
+<p class="text-xs sm:text-sm lg:text-base text-[#4F8CFF] font-mono mt-0.5">
+              IIMS / Taylor's University
+            </p>
+</div>
+<span class="font-mono text-xs sm:text-sm text-[#929AA5] px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded self-start lg:self-auto shrink-0">
+            2026 — Present
+          </span>
+</div>
+<div class="h-[1px] bg-[#252B33]"></div>
+<div class="flex flex-col gap-2">
+<span class="font-mono text-xs sm:text-sm text-[#69727D] uppercase">Core Academic Focus</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Cybersecurity</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Programming</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Operating Systems</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Networking</span>
+<span class="px-3 py-1.5 bg-[#101419] border border-[#252B33] rounded font-mono text-xs sm:text-sm text-[#F2F4F7]">Software Development</span>
+</div>
+</div>
+</div>
+<!-- Additional Info Card -->
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[24px] text-[#4F8CFF]">school</span>
+<div>
+<p class="font-mono text-xs text-[#4F8CFF] uppercase font-semibold">Institution</p>
+<p class="text-sm text-[#F2F4F7]">IIMS College</p>
+<p class="text-xs text-[#929AA5]">Affiliated with Taylor's University</p>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-2 border-t border-[#252B33]">
+<span class="material-symbols-outlined text-[24px] text-[#4F8CFF]">location_on</span>
+<div>
+<p class="font-mono text-xs text-[#4F8CFF] uppercase font-semibold">Location</p>
+<p class="text-sm text-[#F2F4F7]">Kathmandu, Nepal</p>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-2 border-t border-[#252B33]">
+<span class="material-symbols-outlined text-[24px] text-[#4F8CFF]">schedule</span>
+<div>
+<p class="font-mono text-xs text-[#4F8CFF] uppercase font-semibold">Duration</p>
+<p class="text-sm text-[#F2F4F7]">4 Years (2026-2030)</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 07 — CAREER DIRECTION -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]">
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<div>
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">07 — TRAJECTORY</span>
+</div>
+<div>
+<span class="font-mono text-xs text-[#69727D] uppercase">ROADMAP</span>
+</div>
+</div>
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7]">Career Direction</h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
+<!-- Progression Bar -->
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col gap-5">
+<h3 class="font-mono text-xs sm:text-sm text-[#4F8CFF] uppercase font-semibold">Progression</h3>
+<div class="grid grid-cols-3 gap-3">
+<div class="p-4 bg-[#101419] border border-[#252B33] rounded-lg flex flex-col gap-2 text-center hover:border-[#4F8CFF]/50 transition-colors">
+<span class="font-mono text-[10px] sm:text-xs text-[#4F8CFF] font-semibold">STAGE 01</span>
+<span class="text-xs sm:text-sm font-semibold text-[#F2F4F7]">Software Dev</span>
+</div>
+<div class="p-4 bg-[#101419] border border-[#252B33] rounded-lg flex flex-col gap-2 text-center hover:border-[#4F8CFF]/50 transition-colors">
+<span class="font-mono text-[10px] sm:text-xs text-[#4F8CFF] font-semibold">STAGE 02</span>
+<span class="text-xs sm:text-sm font-semibold text-[#F2F4F7]">Cybersecurity</span>
+</div>
+<div class="p-4 bg-[#101419] border border-[#4F8CFF]/50 rounded-lg flex flex-col gap-2 text-center">
+<span class="font-mono text-[10px] sm:text-xs text-[#4F8CFF] font-semibold">STAGE 03</span>
+<span class="text-xs sm:text-sm font-semibold text-[#F2F4F7]">Security Eng</span>
+</div>
+</div>
+</div>
+<!-- Description -->
+<div class="bg-[#11161C] border border-[#252B33] rounded-xl p-5 lg:p-6 flex flex-col justify-center">
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] leading-relaxed">
+          Developing strong foundations across software engineering, operating systems, networking, cloud infrastructure, and cybersecurity with the long-term goal of working in security engineering.
+        </p>
+</div>
+</div>
+</section>
+<!-- 08 — CONTACT -->
+<section class="flex flex-col gap-5 pt-8 border-t border-[#252B33]" id="contact">
+<div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+<div>
+<span class="font-mono text-xs text-[#4F8CFF] font-semibold tracking-widest uppercase">08 — CONTACT</span>
+</div>
+<div>
+<span class="font-mono text-xs text-[#69727D] uppercase">GET IN TOUCH</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+<!-- Contact Info -->
+<div class="lg:col-span-1">
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-[#F2F4F7] mb-2">Let's Connect</h2>
+<p class="text-xs sm:text-sm lg:text-base text-[#929AA5] mb-6 lg:mb-8">Interested in technology, software engineering, cybersecurity, and building useful things.</p>
+<!-- Contact Direct Links -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-4">
+<a class="p-4 lg:p-5 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/60 hover:bg-[#151B22] rounded-xl flex items-center gap-4 transition-colors" href="https://github.com/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[22px] lg:text-[24px] text-[#4F8CFF] shrink-0">code</span>
+<div class="flex flex-col min-w-0">
+<span class="font-mono text-[10px] sm:text-xs text-[#69727D] uppercase">GitHub</span>
+<span class="font-mono text-xs sm:text-sm text-[#F2F4F7] truncate">utshavkatuwal</span>
+</div>
+</a>
+<a class="p-4 lg:p-5 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/60 hover:bg-[#151B22] rounded-xl flex items-center gap-4 transition-colors" href="https://linkedin.com/in/utshavkatuwal" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[22px] lg:text-[24px] text-[#4F8CFF] shrink-0">link</span>
+<div class="flex flex-col min-w-0">
+<span class="font-mono text-[10px] sm:text-xs text-[#69727D] uppercase">LinkedIn</span>
+<span class="font-mono text-xs sm:text-sm text-[#F2F4F7] truncate">utshavkatuwal</span>
+</div>
+</a>
+<a class="p-4 lg:p-5 bg-[#11161C] border border-[#252B33] hover:border-[#4F8CFF]/60 hover:bg-[#151B22] rounded-xl flex items-center gap-4 transition-colors" href="mailto:utshavkatuwal@example.com">
+<span class="material-symbols-outlined text-[22px] lg:text-[24px] text-[#4F8CFF] shrink-0">mail</span>
+<div class="flex flex-col min-w-0">
+<span class="font-mono text-[10px] sm:text-xs text-[#69727D] uppercase">Email</span>
+<span class="font-mono text-xs sm:text-sm text-[#F2F4F7] truncate">utshavkatuwal</span>
+</div>
+</a>
+</div>
+</div>
+<!-- Contact Form -->
+<div class="lg:col-span-1">
+<div class="bg-[#11161C] border border-[#252B33] p-5 lg:p-6 rounded-xl">
+<form class="flex flex-col gap-4" id="contact-form" onsubmit="event.preventDefault(); const btn = document.getElementById('submit-btn'); btn.innerText = 'Message Sent'; setTimeout(() => btn.innerText = 'Send Message', 3000); this.reset();">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="font-mono text-xs sm:text-sm text-[#929AA5]" for="name">Name</label>
+<input class="w-full px-4 py-3 bg-[#101419] border border-[#252B33] rounded focus:border-[#4F8CFF] focus:outline-none text-xs sm:text-sm text-[#F2F4F7] placeholder-[#69727D] transition-colors" id="name" placeholder="Your name" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-mono text-xs sm:text-sm text-[#929AA5]" for="email">Email</label>
+<input class="w-full px-4 py-3 bg-[#101419] border border-[#252B33] rounded focus:border-[#4F8CFF] focus:outline-none text-xs sm:text-sm text-[#F2F4F7] placeholder-[#69727D] transition-colors" id="email" placeholder="name@example.com" required="" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-mono text-xs sm:text-sm text-[#929AA5]" for="subject">Subject</label>
+<input class="w-full px-4 py-3 bg-[#101419] border border-[#252B33] rounded focus:border-[#4F8CFF] focus:outline-none text-xs sm:text-sm text-[#F2F4F7] placeholder-[#69727D] transition-colors" id="subject" placeholder="Project discussion / Technical query" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-mono text-xs sm:text-sm text-[#929AA5]" for="message">Message</label>
+<textarea class="w-full px-4 py-3 bg-[#101419] border border-[#252B33] rounded focus:border-[#4F8CFF] focus:outline-none text-xs sm:text-sm text-[#F2F4F7] placeholder-[#69727D] resize-none transition-colors" id="message" placeholder="Write your message here..." required="" rows="5"></textarea>
+</div>
+<button class="w-full py-3.5 lg:py-4 bg-[#4F8CFF] hover:bg-[#3B7CE8] text-[#080A0D] font-mono font-bold text-xs sm:text-sm rounded transition-colors flex items-center justify-center gap-2" id="submit-btn" type="submit">
+<span>Send Message</span>
+<span class="material-symbols-outlined text-[16px] sm:text-[18px]">send</span>
+</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Minimalist Footer -->
+<footer class="w-full border-t border-[#252B33] bg-[#080A0D] py-10 lg:py-14">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+<div class="flex flex-col items-center lg:items-start gap-1.5">
+<span class="font-bold tracking-wider text-xs sm:text-sm lg:text-base font-mono text-[#F2F4F7] uppercase">
+          UTSHAV KATUWAL
+        </span>
+<span class="font-mono text-[11px] sm:text-xs lg:text-sm text-[#69727D]">
+          Software Developer · Cybersecurity Student
+        </span>
+</div>
+<p class="font-mono text-[11px] sm:text-xs lg:text-sm text-[#69727D]">
+        © 2026 Utshav Katuwal.
+      </p>
+</div>
+</footer>
+<!-- Mobile/Tablet Floating Tab Navigation -->
+<nav class="md:hidden fixed bottom-0 inset-x-0 z-50 pb-safe bg-[#080A0D] border-t border-[#252B33]">
+<div class="h-12 px-3 flex items-center justify-around">
+<a class="flex flex-col items-center justify-center text-[#4F8CFF]" href="#">
+<span class="material-symbols-outlined text-[18px]">home</span>
+<span class="font-mono text-[9px] mt-0.5 font-medium">HOME</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#929AA5] hover:text-[#F2F4F7]" href="#about">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span class="font-mono text-[9px] mt-0.5 font-medium">ABOUT</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#929AA5] hover:text-[#F2F4F7]" href="#projects">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+<span class="font-mono text-[9px] mt-0.5 font-medium">PROJECTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#929AA5] hover:text-[#F2F4F7]" href="#skills">
+<span class="material-symbols-outlined text-[18px]">code</span>
+<span class="font-mono text-[9px] mt-0.5 font-medium">SKILLS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#929AA5] hover:text-[#F2F4F7]" href="#contact">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+<span class="font-mono text-[9px] mt-0.5 font-medium">CONTACT</span>
+</a>
+</div>
+</nav>
+</body></html>
